@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+
+{% block sidebar %}
+<h1></h1>
+
+<ul>
+  <li><a href="/">Main site</a></li>
+  <li><a href="{% url views.admin.get_help %}">Help</a></li>
+</ul>
+
+<h1>Pages</h1>
+<ul>
+  <li><a href="{% url views.admin.index %}">Sitemap</a></li>
+  <li><a href="{% url views.admin.recently_modified %}">Recently modified</a></li>
+  <li><a href="{% url views.admin.new_page None %}">Create page</a></li>
+  <li><a href="{% url views.admin.edit_sidebar %}">Edit sidebar</a></li>
+</ul>
+
+<h1>Users</h1>
+<ul>
+  <li><a href="{% url views.admin.filter_users %}">List users</a></li>
+  <li><a href="{% url views.admin.list_groups %}">List groups</a></li>
+  <li><a href="{% url views.admin.edit_user None %}">Find user</a></li>
+  <li><a href="{% url views.admin.bulk_edit_users %}">Bulk edit users</a></li>
+</ul>
+
+{% endblock %}
+
+
+{% block tracking %}{% endblock %}

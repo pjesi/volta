@@ -1,0 +1,44 @@
+{% extends "admin/base.html" %}
+
+
+{% block heading %}
+{% if group %}
+  Edit Group: {{ group.name }}
+{% else %}
+  Create Group
+{% endif %}
+{% endblock %}
+
+
+{% block content %}
+
+{% if group %}
+  <a href="{% url views.admin.delete_group group.key.id %}">Delete Group</a>
+  <br /><br />
+{% endif %}
+
+
+<h1>Group Information:</h1>
+
+<form action="{% url views.admin.edit_group group.key.id %}"
+      method="post">
+  <table cellpadding="5">
+  {% for field in form %}
+    <tr>
+      <td>{{ field.label_tag }}</td>
+      <td>
+        {{ field }}
+        {% if field.help_text %}<br>{{ field.help_text }}{% endif %}
+        {% if field.errors %}
+          <br><span class="error">{{ field.errors }}</span>
+        {% endif %}
+      </td>
+    </tr>
+  {% endfor %}
+  </table>
+  <br>
+  <input type="submit" value="Save" />
+</form>
+
+
+{% endblock %}
