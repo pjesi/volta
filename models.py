@@ -574,14 +574,17 @@ class Sidebar(db.Model):
     sidebar = Sidebar.load()
 
     if sidebar is None:
-      sidebar = Sidebar(yaml=("---\n"
-                              "heading: ''\n\n"
-                              "pages:"))
+      sidebar = Sidebar(yaml="---\nheading: ''\n\n")
 
-    sidebar.yaml = ("%s\n"
-                    "  - title: %s\n"
-                    "    id: %s") % (sidebar.yaml, page.title, page.key().id())
+    sidebar_documents = list(yaml.load_all(sidebar.yaml))
+    if sidebar_documents:
+      last_document = sidebar_documents[-1]
+      if not last_document.has_key('pages'):
+        last_document['pages'] = []
+      last_document['pages'].append({'id': page.key().id(),
+                                     'title': page.title})
 
+    sidebar.yaml = yaml.safe_dump_all(sidebar_documents)
     sidebar.put()
 
   @staticmethod
