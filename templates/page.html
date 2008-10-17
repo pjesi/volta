@@ -15,6 +15,7 @@
 {% endblock %}
 
 {% block content %}
+  <div class="breadcrumbs">{{ page.breadcrumbs }}</div>
   {% if page.content %}
     {{ page.content }}
   {% else %}

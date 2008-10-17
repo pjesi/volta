@@ -208,7 +208,7 @@ def set_up_data_store():
   """
   acl = models.AccessControlList(global_read=True)
   acl.put()
-  root = models.Page(name='root', title='Welcome to App Engine Site Creator')
+  root = models.Page(name='Home', title='Welcome to App Engine Site Creator')
   root.acl = acl
   root.put()
   return root
