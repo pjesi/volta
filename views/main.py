@@ -29,6 +29,61 @@ import models
 import utility
 
 
+def send_page(page, request):
+  """Sends a given page to a user if they have access rights.
+  
+  Args:
+    page: The page to send to the user
+    request: The Django request object
+
+  Returns:
+    A Django HttpResponse containing the requested page, or an error message.
+
+  """
+  profile = request.profile
+  
+  if not page.user_can_read(profile):
+    logging.warning('User %s made an invalid attempt to access page %s' %
+                    (profile.email, page.name))
+    return utility.forbidden(request)
+
+  files = page.attached_files()
+  files = [file_obj for file_obj in files if not file_obj.is_hidden]
+
+  for item in files:
+    ext = item.name.split('.')[-1]
+    item.icon = '/static/images/fileicons/%s.png' % ext
+
+  is_editor = page.user_can_write(profile)
+
+  return utility.respond(request, 'page', {'page': page, 'files': files,
+                                           'is_editor': is_editor})
+
+def send_file(file_record, request):
+  """Sends a given file to a user if they have access rights.
+  
+  Args:
+    file_record: The file to send to the user
+    request: The Django request object
+
+  Returns:
+    A Django HttpResponse containing the requested file, or an error message.
+
+  """
+  profile = request.profile
+  mimetype = mimetypes.guess_type(file_record.name)[0]
+
+  if not file_record.user_can_read(profile):
+    logging.warning('User %s made an invalid attempt to access file %s' %
+                    (profile.email, file_record.name))
+    return utility.forbidden(request)
+
+  expires = datetime.datetime.now() + configuration.FILE_CACHE_TIME
+  response = http.HttpResponse(content=file_record.data, mimetype=mimetype)
+  response['Cache-Control'] = configuration.FILE_CACHE_CONTROL
+  response['Expires'] = expires.strftime('%a, %d %b %Y %H:%M:%S GMT')
+  return response
+
 def get_url(request, path_str):
   """Parse the URL and return the requested content to the user.
 
@@ -41,8 +96,6 @@ def get_url(request, path_str):
     message.
 
   """
-  profile = request.profile
-
   def follow_url_forwards(base, path):
     """Follow the path forwards, returning the desired item."""
     if not base:
@@ -66,46 +119,14 @@ def get_url(request, path_str):
       return follow_url_forwards(models.Page.get_root(), post_path)
     return follow_url_backwards(pre_path[:-1], [pre_path[-1]] + post_path)
 
-  def send_page(page):
-    if not page.user_can_read(profile):
-      logging.warning('User %s made an invalid attempt to access page %s' %
-                      (profile.email, page.name))
-      return utility.forbidden(request)
-
-    files = page.attached_files()
-    files = [file_obj for file_obj in files if not file_obj.is_hidden]
-
-    for item in files:
-      ext = item.name.split('.')[-1]
-      item.icon = '/static/images/fileicons/%s.png' % ext
-
-    is_editor = page.user_can_write(profile)
-
-    return utility.respond(request, 'page', {'page': page, 'files': files,
-                                             'is_editor': is_editor})
-
-  def send_file(file_record):
-    mimetype = mimetypes.guess_type(file_record.name)[0]
-
-    if not file_record.user_can_read(profile):
-      logging.warning('User %s made an invalid attempt to access file %s' %
-                      (profile.email, file_record.name))
-      return utility.forbidden(request)
-
-    expires = datetime.datetime.now() + configuration.FILE_CACHE_TIME
-    response = http.HttpResponse(content=file_record.data, mimetype=mimetype)
-    response['Cache-Control'] = configuration.FILE_CACHE_CONTROL
-    response['Expires'] = expires.strftime('%a, %d %b %Y %H:%M:%S GMT')
-    return response
-
   path = [dir_name for dir_name in path_str.split('/') if dir_name is not '']
   item = follow_url_backwards(path, [])
 
   if isinstance(item, models.Page):
-    return send_page(item);
+    return send_page(item, request)
 
   if isinstance(item, models.FileStore):
-    return send_file(item);
+    return send_file(item, request)
 
   return utility.page_not_found(request)
 
