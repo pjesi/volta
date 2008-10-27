@@ -277,18 +277,14 @@ class Page(File):
     key = 'breadcrumbs:%s' % self.key().id()
     breadcrumbs = utility.memcache_get(key)
     
-    if not breadcrumbs:
-      if not self.parent_page:
-        breadcrumbs = ''
-      else:
-        if not self.parent_page.breadcrumbs:
-          breadcrumbs = '<a href="/%s">%s</a>' % (self.parent_page.path,
-                                                  self.parent_page.name)
-        else:
-          breadcrumbs = (
-              '%s &gt; <a href="/%s">%s</a>' % (self.parent_page.breadcrumbs,
-                                                self.parent_page.path,
-                                                self.parent_page.name))
+    if breadcrumbs:
+      return breadcrumbs
+    
+    breadcrumbs = []
+    if self.parent_page:
+      breadcrumbs = self.parent_page.breadcrumbs
+      breadcrumbs.append({'path': '/' + self.parent_page.path,
+                          'name': self.parent_page.name})
       
     utility.memcache_set(key, breadcrumbs)
     return breadcrumbs 
