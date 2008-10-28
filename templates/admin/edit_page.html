@@ -11,11 +11,11 @@
 {% endblock %}
 
 {% block includes %}
+  <script type="text/javascript" src="/fckeditor/fckeditor.js"></script>
   <script type="text/javascript"
-          src="http://ajax.googleapis.com/ajax/libs/dojo/1.1.1/dojo/dojo.xd.js"
+          src="http://ajax.googleapis.com/ajax/libs/dojo/1.2.0/dojo/dojo.xd.js"
           djConfig="parseOnLoad:true,isDebug:false"></script>
   <script type="text/javascript">
-    dojo.require('dijit.Editor');
     dojo.require('dijit.layout.ContentPane');
     dojo.require('dijit.layout.TabContainer');
     dojo.require('dijit.form.Button');
@@ -85,10 +85,20 @@
         dojo.fadeOut({node: message_id, duration: 2000, delay:10000}).play()
       }
     }
+    
+    function createEditor() {
+      var oFCKeditor = new FCKeditor('editorHtml');
+      oFCKeditor.BasePath = "/fckeditor/";
+      oFCKeditor.Config["CustomConfigurationsPath"] = "/static/js/fck_config.js";
+      oFCKeditor.Height = 328;
+      oFCKeditor.ToolbarSet = 'AESC_Toolbar';
+      oFCKeditor.ReplaceTextarea();
+    }
 
     dojo.addOnLoad(selectTab);
-    dojo.addOnLoad(showBody);
     dojo.addOnLoad(showMessage);
+    dojo.addOnLoad(createEditor);
+    dojo.addOnLoad(showBody);
   </script>
 {% endblock %}
 
@@ -139,24 +149,9 @@
       {% endfor %}
     </table>
     <div id="editorTabs" dojoType="dijit.layout.TabContainer" tabPosition="right-h" style="width:100%; height:331px; margin-top:20px;">
-      <div id="editorTab" dojoType="dijit.layout.ContentPane" title="Editor" style="padding:0px;">
-        <div id="editor" dojoType="dijit.Editor"
-             style="width:100%; height:325px;">
+      <div id="editorTab" dojoType="dijit.layout.ContentPane" title="Editor" style="padding:0px">
+        <textarea id="editorHtml" name="editorHtml">
           {{ page.content }}
-        </div>
-      </div>
-      <div dojoType="dijit.layout.ContentPane" title="Edit HTML" style="padding:5px;">
-        <script type="dojo/method" event="onShow" args="evt">
-          var editor = dijit.byId('editor');
-          var editorHtml = dojo.byId('editorHtml');
-          editorHtml.value = editor.getValue(false);
-        </script>
-        <script type="dojo/method" event="onHide" args="evt">
-          var editor = dijit.byId('editor');
-          var editorHtml = dojo.byId('editorHtml');
-          editor.setValue(editorHtml.value);
-        </script>
-        <textarea id="editorHtml" name="editorHtml" style="width:99%; height:315px;">
         </textarea>
       </div>
       <div dojoType="dijit.layout.ContentPane" title="Upload HTML" style="padding:5px;">
@@ -177,13 +172,6 @@
     <br />
     <script type="text/javascript">
       function submitContents() {
-        var editorTabs = dijit.byId('editorTabs');
-        var editorTab = dijit.byId('editorTab');
-        editorTabs.selectChild(editorTab);
-        
-        var editor = dijit.byId('editor');
-        var editorHtml = dojo.byId('editorHtml');
-        editorHtml.value = editor.getValue(false);
         dojo.byId('editForm').submit();
       }
     </script>
