@@ -87,7 +87,7 @@ def get_help(request):
 def edit_acl(request):
   """Edits the contents of an ACL."""
 
-  def __grant_access(acl, list_to_edit):
+  def grant_access(acl, list_to_edit):
     """Grants access to a page based on data in the POST.
 
     Args:
@@ -106,7 +106,7 @@ def edit_acl(request):
       if datastore_object.key() not in acl.__getattribute__(list_to_edit):
         acl.__getattribute__(list_to_edit).append(datastore_object.key())
 
-  def __remove_access(acl, list_to_edit):
+  def remove_access(acl, list_to_edit):
     """Removes access to a page based on data in the POST.
 
     Args:
@@ -141,16 +141,12 @@ def edit_acl(request):
     page.acl = acl
     page.put()
 
-  acl.global_write = False
-  acl.global_read = False
-  if 'global_write' in request.POST:
-    acl.global_write = True
-  if 'global_read' in request.POST:
-    acl.global_read = True
+  acl.global_write = 'global_write' in request.POST
+  acl.global_read = 'global_read' in request.POST
 
   for object_list in ['group_write', 'group_read', 'user_write', 'user_read']:
-    __grant_access(acl, object_list)
-    __remove_access(acl, object_list)
+    grant_access(acl, object_list)
+    remove_access(acl, object_list)
 
   acl.put()
 
@@ -277,6 +273,11 @@ def upload_file(request):
 
   page_id = request.POST['page_id']
   page = models.Page.get_by_id(int(page_id))
+  
+  if not page:
+    logging.warning('admin.upload_file was passed an invalid page id %r',
+                    page_id)
+    return utility.page_not_found(request)
 
   if not page.user_can_write(request.profile):
     return utility.forbidden(request)
@@ -302,11 +303,6 @@ def upload_file(request):
     except validators.ValidationError, excption:
       return utility.page_not_found(request, excption.messages[0])
 
-  if not page:
-    logging.warning('admin.upload_file was passed an invalid page id %r',
-                    page_id)
-    return utility.page_not_found(request)
-
   file_record = page.get_attachment(file_name)
 
   if not file_record:
@@ -318,10 +314,7 @@ def upload_file(request):
     file_record.url = db.Link(url)
 
   # Determine whether to list the file when the page is viewed
-  if 'hidden' in request.POST:
-    file_record.is_hidden = True
-  else:
-    file_record.is_hidden = False
+  file_record.is_hidden = 'hidden' in request.POST
 
   file_record.put()
   utility.clear_memcache()
@@ -647,7 +640,7 @@ def export_users(_request):
 
 
 @super_user_required
-def add_to_sidebar(request, page_id):
+def add_to_sidebar(_request, page_id):
   """Adds a page to the bottom of the sidebar.
 
   Args:
