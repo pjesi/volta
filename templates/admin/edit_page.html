@@ -148,27 +148,9 @@
       </tr>
       {% endfor %}
     </table>
-    <div id="editorTabs" dojoType="dijit.layout.TabContainer" tabPosition="right-h" style="width:100%; height:331px; margin-top:20px;">
-      <div id="editorTab" dojoType="dijit.layout.ContentPane" title="Editor" style="padding:0px">
-        <textarea id="editorHtml" name="editorHtml">
-          {{ page.content }}
-        </textarea>
-      </div>
-      <div dojoType="dijit.layout.ContentPane" title="Upload HTML" style="padding:5px;">
-        <div style="margin-top:20px;">
-          Choose an HTML file overwrite the contents of this page: <br>
-          <div style="margin: 20px 0px 0px 40px;">
-            <input id="id_content" name="content" type="file" />
-          </div>
-        </div>
-        {% if page.content %}
-          <div style="margin-top:30px;">
-            <a href="{% url views.admin.download_page_html page.key.id %}">
-                Download</a> the current html.
-          </div>
-        {% endif %}
-      </div>
-    </div>
+    <textarea id="editorHtml" name="editorHtml">
+      {{ page.content }}
+    </textarea>
     <br />
     <script type="text/javascript">
       function submitContents() {
