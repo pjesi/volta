@@ -270,6 +270,24 @@ class Page(File):
   def filestore_children(self):
     """Returns a query for all of the child FileStore objects."""
     return FileStore.all().filter('parent_page = ', self)
+  
+  @property
+  def breadcrumbs(self):
+    """Returns the HTML representation of the breadcrumbs for the page."""
+    key = 'breadcrumbs:%s' % self.key().id()
+    breadcrumbs = utility.memcache_get(key)
+    
+    if breadcrumbs:
+      return breadcrumbs
+    
+    breadcrumbs = []
+    if self.parent_page:
+      breadcrumbs = self.parent_page.breadcrumbs
+      breadcrumbs.append({'path': '/' + self.parent_page.path,
+                          'name': self.parent_page.name})
+      
+    utility.memcache_set(key, breadcrumbs)
+    return breadcrumbs 
 
   def get_attachment(self, name):
     """Retrieves a file with the given name that is attached to the page.
@@ -290,7 +308,7 @@ class Page(File):
       A query representing the list of all attached files
 
     """
-    key = 'file-list:' + self.name
+    key = 'file-list:%s' % self.key().id()
     file_list = utility.memcache_get(key)
     if not file_list:
       # Convert the iterator to a list for caching

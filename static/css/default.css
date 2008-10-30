@@ -203,6 +203,11 @@ div.section iframe {
   margin: auto;
 }
 
+.breadcrumbs {
+	font-size: 80%;
+	margin-bottom: 10px;
+}
+
 div.message {
   text-align: center;
   font-weight: bold;

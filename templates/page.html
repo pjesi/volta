@@ -15,6 +15,16 @@
 {% endblock %}
 
 {% block content %}
+  {% if page.breadcrumbs %}
+    <div class="breadcrumbs">
+    {% for breadcrumb in page.breadcrumbs %}
+      <a href="{{ breadcrumb.path }}">{{ breadcrumb.name }}</a>
+      {% if not forloop.last %}
+        &gt;
+      {% endif %}
+    {% endfor %}
+    </div>
+  {% endif %}
   {% if page.content %}
     {{ page.content }}
   {% else %}
