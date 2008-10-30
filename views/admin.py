@@ -217,11 +217,7 @@ def edit_page(request, page_id, parent_id=None):
     return utility.respond(request, 'admin/edit_page',
                            {'form': form, 'page': page, 'files': files})
 
-  if request.FILES and 'content' in request.FILES:
-    content = request.FILES['content']['content']
-    page.content = db.Text(content)
-  else:
-    page.content = request.POST['editorHtml']
+  page.content = request.POST['editorHtml']
 
   if parent_id and not page.parent_page:
     page.parent_page = models.Page.get_by_id(int(parent_id))
