@@ -1,0 +1,21 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+<h1>Groups:</h1>
+
+<ul>
+{% for group in groups %}
+  <li>
+    <b>{{ group.name|escape }}</b> -
+    <a href="{% url views.admin.edit_group group.key.id %}">edit</a>
+    <br />
+    {{ group.description|escape }}
+  </li>
+{% endfor %}
+</ul>
+
+<p>
+  <a href="{% url views.admin.new_group %}">Create a new group</a>
+</p>
+
+{% endblock %}
