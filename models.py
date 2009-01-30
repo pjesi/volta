@@ -67,10 +67,7 @@ class AccessControlList(db.Model):
       True if the user has the requested access, False otherwise
 
     """
-    if user is not None:
-        key = 'acl-has-%s:%s-%s' % (access_type, self.key().id(), user.key().id())
-    else:
-        key = 'acl-has-%s:%s' % (access_type, self.key().id())
+    key = 'acl-has-%s:%s-%s' % (access_type, self.key().id(), user.key().id())
     has_access = utility.memcache_get(key)
 
     if has_access is not None:
@@ -79,18 +76,14 @@ class AccessControlList(db.Model):
     global_access = self.__getattribute__('global_%s' % access_type)
     user_list = self.__getattribute__('user_%s' % access_type)
     group_list = self.__getattribute__('group_%s' % access_type)
-    
-    if global_access:
+
+    if global_access or user.is_superuser or user.key() in user_list:
       has_access = True
-        
-    if user is not None:
-        if user.is_superuser or user.key() in user_list:
-            has_access = True
-        else:
-          for group in UserGroup.get(group_list):
-            if user.key() in group.users:
-              has_access = True
-              break
+    else:
+      for group in UserGroup.get(group_list):
+        if user.key() in group.users:
+          has_access = True
+          break
 
     if has_access is None:
       has_access = False
@@ -630,15 +623,11 @@ class Sidebar(db.Model):
       access level
 
     """
-    if profile is not None:
-        key = 'sidebar:%s' % profile.key().id()        
-    else:
-         key = 'sidebar'
-         
+    key = 'sidebar:%s' % profile.key().id()
     html = utility.memcache_get(key)
     if html:
       return html
-      
+
     html = []
     sidebar = Sidebar.load()
 
@@ -658,8 +647,8 @@ class Sidebar(db.Model):
                             (url, item['title']))
 
       if section_html:
-        html.append('<h3 class="leftbox">%s</h3>\n' % section['heading'])
-        html.append('<ul class="leftbox borderedlist">\n%s</ul>\n' % ''.join(section_html))
+        html.append('<h1>%s</h1>\n' % section['heading'])
+        html.append('<ul>\n%s</ul>\n' % ''.join(section_html))
 
     html = ''.join(html)
     utility.memcache_set(key, html)

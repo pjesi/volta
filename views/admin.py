@@ -218,8 +218,10 @@ def edit_page(request, page_id, parent_id=None):
                            {'form': form, 'page': page, 'files': files})
 
   page.content = request.POST['editorHtml']
+
   if parent_id and not page.parent_page:
     page.parent_page = models.Page.get_by_id(int(parent_id))
+
   page.put()
 
   return utility.edit_updated_page(page.key().id(),
@@ -241,10 +243,7 @@ def new_page(request, parent_id):
     parent_page = models.Page.get_by_id(int(parent_id))
   else:
     parent_page = models.Page.get_root()
-    if parent_page:
-        # there is a root, lets force everything to be a child of the root and set the parent_id
-        parent_id = parent_page.key().id()
-    else:
+    if not parent_page:
       # TODO(gpennington): Figure out a more intuitive method for site
       # initialization
       parent_page = utility.set_up_data_store()
