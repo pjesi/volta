@@ -49,18 +49,18 @@ class AddUserToRequestMiddleware(object):
     #if not user:
       #return http.HttpResponseRedirect(users.create_login_url(request.path))
     if user:
-        request.user = user
-        request.user_is_admin = users.is_current_user_admin()
-        profile = models.UserProfile.load(user.email())
-        if not profile:
-          if request.user_is_admin:
-            profile = models.UserProfile(email=user.email(), is_superuser=True)
-            profile.put()
-            logging.info('Created profile for admin %s' % profile.email)
-          #else:
-            #return utility.forbidden(request)
-        request.profile = profile
+      request.user = user
+      request.user_is_admin = users.is_current_user_admin()
+      profile = models.UserProfile.load(user.email())
+      if not profile:
+        if request.user_is_admin:
+          profile = models.UserProfile(email=user.email(), is_superuser=True)
+          profile.put()
+          logging.info('Created profile for admin %s' % profile.email)
+        #else:
+          #return utility.forbidden(request)
+      request.profile = profile
     else:
-        request.profile = None
-        request.user = None
+      request.profile = None
+      request.user = None
     return None

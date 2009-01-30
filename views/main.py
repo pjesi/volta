@@ -43,12 +43,12 @@ def send_page(page, request):
   profile = request.profile
   global_access = page.acl.__getattribute__('global_read')
   if not global_access:      
-      if profile is None:
-        return http.HttpResponseRedirect(users.create_login_url(request.path))
-      if not page.user_can_read(profile):
-        logging.warning('User %s made an invalid attempt to access page %s' %
-                        (profile.email, page.name))
-        return utility.forbidden(request)
+    if profile is None:
+      return http.HttpResponseRedirect(users.create_login_url(request.path))
+    if not page.user_can_read(profile):
+      logging.warning('User %s made an invalid attempt to access page %s' %
+                      (profile.email, page.name))
+      return utility.forbidden(request)
 
   files = page.attached_files()
   files = [file_obj for file_obj in files if not file_obj.is_hidden]
@@ -58,14 +58,15 @@ def send_page(page, request):
     item.icon = '/static/images/fileicons/%s.png' % ext
 
   if profile is None:
-      is_editor = False
+    is_editor = False
   else:
-      is_editor = page.user_can_write(profile)
+    is_editor = page.user_can_write(profile)
 
   base_html = '../templates/themes/%s/base.html' % (configuration.SYSTEM_THEME_NAME)
   page_html = '../templates/themes/%s/page.html' % (configuration.SYSTEM_THEME_NAME)
   return utility.respond(request, page_html, {'page': page, 'files': files,
-                                           'is_editor': is_editor, 'base_html': base_html})
+                                           'is_editor': is_editor, 
+                                           'base_html': base_html})
 
 def send_file(file_record, request):
   """Sends a given file to a user if they have access rights.

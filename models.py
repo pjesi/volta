@@ -84,13 +84,13 @@ class AccessControlList(db.Model):
       has_access = True
         
     if user is not None:
-        if user.is_superuser or user.key() in user_list:
+      if user.is_superuser or user.key() in user_list:
+        has_access = True
+      else:
+        for group in UserGroup.get(group_list):
+          if user.key() in group.users:
             has_access = True
-        else:
-          for group in UserGroup.get(group_list):
-            if user.key() in group.users:
-              has_access = True
-              break
+            break
 
     if has_access is None:
       has_access = False
