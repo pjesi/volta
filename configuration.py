@@ -34,10 +34,13 @@ FILE_CACHE_TIME = datetime.timedelta(days=1)
 
 
 # Title for the website
-SYSTEM_TITLE = ''
+SYSTEM_TITLE = 'App Engine Site Creator'
 
 # Description for the website
-SYSTEM_DESCRIPTION = ''
+SYSTEM_DESCRIPTION = 'This site was built using App Engine Site Creator'
 
 # Unique identifier from Google Analytics (ie. UA-xxxxxxx-x)
 ANALYTICS_ID = ''
+
+#Location of of theme for your site (ie '../templates/themes/ecobusiness/base.html') where your customized base.html should be located
+SYSTEM_THEME = '../templates/themes/ecobusiness/base.html'
