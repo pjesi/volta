@@ -658,8 +658,8 @@ class Sidebar(db.Model):
                             (url, item['title']))
 
       if section_html:
-        html.append('<h3 class="leftbox">%s</h3>\n' % section['heading'])
-        html.append('<ul class="leftbox borderedlist">\n%s</ul>\n' % ''.join(section_html))
+        html.append('<h1>%s</h1>\n' % section['heading'])
+        html.append('<ul>\n%s</ul>\n' % ''.join(section_html))
 
     html = ''.join(html)
     utility.memcache_set(key, html)

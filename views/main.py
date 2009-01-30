@@ -62,8 +62,10 @@ def send_page(page, request):
   else:
       is_editor = page.user_can_write(profile)
 
-  return utility.respond(request, 'page', {'page': page, 'files': files,
-                                           'is_editor': is_editor})
+  base_html = '../templates/themes/%s/base.html' % (configuration.SYSTEM_THEME_NAME)
+  page_html = '../templates/themes/%s/page.html' % (configuration.SYSTEM_THEME_NAME)
+  return utility.respond(request, page_html, {'page': page, 'files': files,
+                                           'is_editor': is_editor, 'base_html': base_html})
 
 def send_file(file_record, request):
   """Sends a given file to a user if they have access rights.

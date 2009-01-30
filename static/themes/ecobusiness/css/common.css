@@ -120,6 +120,17 @@
 	.features{padding-top:15px;font:1.27em Arial, Helvetica, sans-serif;}
 	
 	#leftcolumn .leftbox p{padding-bottom:1em;line-height:1.5em; font-size:12px}	
+	#leftcolumn ul{background: #f1f0ef;padding: 10px 23px 10px 23px;margin-bottom:3px;line-height:1.2em;font-size: 1.2em;}
+	#leftcolumn ul li{
+		border-bottom: 1px dashed #d1cfcd;
+	}
+	#leftcolumn ul li a{
+		display: block;
+		padding:3px 0 3px 2px;
+		height: 26px;
+		color: #42423b;
+	}
+	#leftcolumn ul li a:hover{background: #E5E5E4;color: #42423b;}
 	/* center column */
 	.article_wrapper h2{color: #5699A7; font-size:2em;margin:10px 0;}
 	.article_wrapper p{padding-bottom:10px;font-size:1.3em;}	

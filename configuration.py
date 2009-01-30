@@ -42,5 +42,5 @@ SYSTEM_DESCRIPTION = 'This site was built using App Engine Site Creator'
 # Unique identifier from Google Analytics (ie. UA-xxxxxxx-x)
 ANALYTICS_ID = ''
 
-#Location of of theme for your site (ie '../templates/themes/ecobusiness/base.html') where your customized base.html should be located
-SYSTEM_THEME = '../templates/themes/ecobusiness/base.html'
+#Name of theme for your site, must be located in (ie templates/themes/{FOLDER NAME}') where your customized base and page files should be located
+SYSTEM_THEME_NAME = 'ecobusiness'
