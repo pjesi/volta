@@ -41,11 +41,14 @@ def send_page(page, request):
 
   """
   profile = request.profile
-  
-  if not page.user_can_read(profile):
-    logging.warning('User %s made an invalid attempt to access page %s' %
-                    (profile.email, page.name))
-    return utility.forbidden(request)
+  global_access = page.acl.__getattribute__('global_read')
+  if not global_access:      
+      if profile is None:
+        return http.HttpResponseRedirect(users.create_login_url(request.path))
+      if not page.user_can_read(profile):
+        logging.warning('User %s made an invalid attempt to access page %s' %
+                        (profile.email, page.name))
+        return utility.forbidden(request)
 
   files = page.attached_files()
   files = [file_obj for file_obj in files if not file_obj.is_hidden]
@@ -54,7 +57,10 @@ def send_page(page, request):
     ext = item.name.split('.')[-1]
     item.icon = '/static/images/fileicons/%s.png' % ext
 
-  is_editor = page.user_can_write(profile)
+  if profile is None:
+      is_editor = False
+  else:
+      is_editor = page.user_can_write(profile)
 
   return utility.respond(request, 'page', {'page': page, 'files': files,
                                            'is_editor': is_editor})

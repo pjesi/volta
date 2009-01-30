@@ -9,20 +9,37 @@ handlers:
   - url: /favicon.ico
     static_files: static/images/favicon.ico
     upload: static/images/favicon.ico
-    login: required
   
   - url: /static/images/fileicons/.*
     script: zip_handler.py
-    login: required
     
   - url: /fckeditor/.*
     script: zip_handler.py
-    login: required
   
   - url: /static
     static_dir: static
-    login: required
-
-  - url: /.*
+ 
+  - url: /admin/.*
     script: main.py
     login: required
+ 
+  - url: /.*
+    script: main.py
+    
+
+    
+skip_files: |
+ ^(.*/)?(
+ (app\.yaml)|
+ (app\.yml)|
+ (index\.yaml)|
+ (index\.yml)|
+ (#.*#)|
+ (.*~)|
+ (.*\.py[co])|
+ (.*/RCS/.*)|
+ (\..*)|
+ (dev/.*)|
+ (tests/.*)|
+ (docs/.*)|
+ )$
