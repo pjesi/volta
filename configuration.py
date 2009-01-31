@@ -43,4 +43,4 @@ SYSTEM_DESCRIPTION = 'This site was built using App Engine Site Creator'
 ANALYTICS_ID = ''
 
 #Name of theme for your site, must be located in (ie templates/themes/{FOLDER NAME}') where your customized base and page files should be located
-SYSTEM_THEME_NAME = 'ecobusiness'
+SYSTEM_THEME_NAME = 'nautica05'
