@@ -242,8 +242,9 @@ def new_page(request, parent_id):
   else:
     parent_page = models.Page.get_root()
     if parent_page:
-        # there is a root, lets force everything to be a child of the root and set the parent_id
-        parent_id = parent_page.key().id()
+      # there is a root, lets force everything to be a child of the root
+      # and set the parent_id
+      parent_id = parent_page.key().id()
     else:
       # TODO(gpennington): Figure out a more intuitive method for site
       # initialization

@@ -24,7 +24,7 @@ import datetime
 FOOTER_HTML = (
     '<a href="http://code.google.com/appengine">Powered by '
     'Google App Engine</a> | '
-    '<a href="http://code.google.com/p/app-engine-site-creator/" '
+    '<a href="http://code.google.com/p/app-engine-site-creator/"> '
     'App Engine Site Creator</a> ')
 
 
@@ -42,5 +42,7 @@ SYSTEM_DESCRIPTION = 'This site was built using App Engine Site Creator'
 # Unique identifier from Google Analytics (ie. UA-xxxxxxx-x)
 ANALYTICS_ID = ''
 
-#Name of theme for your site, must be located in (ie templates/themes/{FOLDER NAME}') where your customized base and page files should be located
+# Name of theme for your site, must be located in
+# 'templates/themes/{FOLDER NAME}' where your customized
+# base and page files should be located
 SYSTEM_THEME_NAME = 'nautica05'

@@ -68,9 +68,9 @@ class AccessControlList(db.Model):
 
     """
     if user is not None:
-        key = 'acl-has-%s:%s-%s' % (access_type, self.key().id(), user.key().id())
+      key = 'acl-has-%s:%s-%s' % (access_type, self.key().id(), user.key().id())
     else:
-        key = 'acl-has-%s:%s' % (access_type, self.key().id())
+      key = 'acl-has-%s:%s' % (access_type, self.key().id())
     has_access = utility.memcache_get(key)
 
     if has_access is not None:
@@ -631,14 +631,14 @@ class Sidebar(db.Model):
 
     """
     if profile is not None:
-        key = 'sidebar:%s' % profile.key().id()        
+      key = 'sidebar:%s' % profile.key().id()        
     else:
-         key = 'sidebar'
+      key = 'sidebar'
          
     html = utility.memcache_get(key)
     if html:
       return html
-      
+
     html = []
     sidebar = Sidebar.load()
 

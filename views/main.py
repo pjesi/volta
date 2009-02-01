@@ -41,8 +41,8 @@ def send_page(page, request):
 
   """
   profile = request.profile
-  global_access = page.acl.__getattribute__('global_read')
-  if not global_access:      
+  global_access = page.acl.global_read
+  if not global_access:
     if profile is None:
       return http.HttpResponseRedirect(users.create_login_url(request.path))
     if not page.user_can_read(profile):
@@ -57,16 +57,13 @@ def send_page(page, request):
     ext = item.name.split('.')[-1]
     item.icon = '/static/images/fileicons/%s.png' % ext
 
-  if profile is None:
-    is_editor = False
-  else:
-    is_editor = page.user_can_write(profile)
+  is_editor = page.user_can_write(profile)
 
   base_html = '../templates/themes/%s/base.html' % (configuration.SYSTEM_THEME_NAME)
   page_html = '../templates/themes/%s/page.html' % (configuration.SYSTEM_THEME_NAME)
   return utility.respond(request, page_html, {'page': page, 'files': files,
-                                           'is_editor': is_editor, 
-                                           'base_html': base_html})
+                                              'is_editor': is_editor, 
+                                              'base_html': base_html})
 
 def send_file(file_record, request):
   """Sends a given file to a user if they have access rights.
