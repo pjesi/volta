@@ -3,6 +3,17 @@ All rights reserved.
 
 App Engine Site Creator - Release Notes
 
+Version 1.x - 
+==============================
+
+  - Added anonymous (public) browsing of pages marked as "Anyone can read"
+      http://code.google.com/p/app-engine-site-creator/issues/detail?id=19
+  - Fixed "create page" error caused by creating a page not under root page
+      http://code.google.com/p/app-engine-site-creator/issues/detail?id=21
+  - Added different front end as an example of customization 
+      http://code.google.com/p/app-engine-site-creator/issues/detail?id=7
+
+
 Version 1.1 - October 30, 2008
 ==============================
 
