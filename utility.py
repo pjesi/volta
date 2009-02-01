@@ -55,11 +55,14 @@ def respond(request, template, params=None):
   else:
     params['sign_in'] = users.CreateLoginURL(request.path)
 
-  if hasattr(request, 'profile'):
+  if hasattr(request, 'profile') and request.profile is not None:
     profile = request.profile
     params['sidebar'] = models.Sidebar.render(profile)
     params['is_superuser'] = profile.is_superuser
-
+  else:
+    params['is_superuser'] = False
+    params['sidebar'] = models.Sidebar.render(None)
+    
   params['configuration'] = configuration
 
   if not template.endswith('.html'):

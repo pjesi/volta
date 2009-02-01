@@ -22,10 +22,10 @@ import datetime
 
 # This HTML block will be printed in the footer of every page.
 FOOTER_HTML = (
-    'Powered by <a href="http://code.google.com/appengine">'
-    'Google App Engine</a> | Check out the '
-    '<a href="http://code.google.com/p/app-engine-site-creator/">'
-    'project page</a> on Google Code')
+    '<a href="http://code.google.com/appengine">Powered by '
+    'Google App Engine</a> | '
+    '<a href="http://code.google.com/p/app-engine-site-creator/"> '
+    'App Engine Site Creator</a> ')
 
 
 # File caching controls
@@ -36,6 +36,13 @@ FILE_CACHE_TIME = datetime.timedelta(days=1)
 # Title for the website
 SYSTEM_TITLE = 'App Engine Site Creator'
 
+# Description for the website
+SYSTEM_DESCRIPTION = 'This site was built using App Engine Site Creator'
 
-# Unique identifier from Google Analytics
+# Unique identifier from Google Analytics (ie. UA-xxxxxxx-x)
 ANALYTICS_ID = ''
+
+# Name of theme for your site, must be located in
+# 'templates/themes/{FOLDER NAME}' where your customized
+# base and page files should be located
+SYSTEM_THEME_NAME = 'nautica05'

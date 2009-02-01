@@ -2,7 +2,7 @@
   "http://www.w3.org/TR/html4/loose.dtd">
 <html>
   <head>
-    <title>
+	<title>
     {% block title %}
       {% if title %} {{ title }} {% else %} {{ configuration.SYSTEM_TITLE }} {% endif %}
     {% endblock %}
@@ -11,7 +11,7 @@
     {% block style %}
     <style type="text/css">
       @import "http://ajax.googleapis.com/ajax/libs/dojo/1.2.0/dojo/resources/dojo.css";
-      @import "http://ajax.googleapis.com/ajax/libs/dojo/1.2.0/dijit/themes/soria/soria.css";
+      @import "http://ajax.googleapis.com/ajax/libs/dojo/1.2.0/dijit/themes/tundra/tundra.css";
       @import "/static/css/default.css";
     </style>
     {% endblock %}
@@ -20,10 +20,10 @@
     {% endblock %}
   </head>
 
-  <body class="soria" {% block body_attributes %}{% endblock %}>
+  <body class="tundra" {% block body_attributes %}{% endblock %}>
     <div id="header">
       <div id="headerLogo">
-        <img src="/static/images/logo.png" alt="Site Logo" />
+        <img src="/static/images/logo.png" alt="AppEngine Site Creator" />
       </div>
       <div id="userHeader">
         {% block user_header %}

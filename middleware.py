@@ -31,7 +31,8 @@ class AddUserToRequestMiddleware(object):
   """Adds a user data to each request.
 
   Add a user object, a profile object, and a user_is_admin flag to each
-  request.  If the user is not logged in, redirect them.
+  request.  If the user is an administrator of the application but does
+  not have a profile, one is created.
 
   """
 
@@ -46,18 +47,18 @@ class AddUserToRequestMiddleware(object):
       None
     """
     user = users.GetCurrentUser()
-    if not user:
-      return http.HttpResponseRedirect(users.create_login_url(request.path))
     request.user = user
-    request.user_is_admin = users.is_current_user_admin()
-    profile = models.UserProfile.load(user.email())
-    if not profile:
-      if request.user_is_admin:
-        profile = models.UserProfile(email=user.email(), is_superuser=True)
-        profile.put()
-        logging.info('Created profile for admin %s' % profile.email)
-      else:
-        return utility.forbidden(request)
-    request.profile = profile
+    request.profile = None
+    
+    if user:
+      request.user_is_admin = users.is_current_user_admin()
+      profile = models.UserProfile.load(user.email())
+      if not profile:
+        if request.user_is_admin:
+          profile = models.UserProfile(email=user.email(), is_superuser=True)
+          profile.put()
+          logging.info('Created profile for admin %s' % profile.email)
+
+      request.profile = profile
 
     return None
