@@ -664,3 +664,50 @@ class Sidebar(db.Model):
     html = ''.join(html)
     utility.memcache_set(key, html)
     return html
+
+
+
+
+
+class Template(db.Model):
+  # pylint: disable-msg=R0904
+  """Model for django templates."""
+
+  name = db.StringProperty(required=True)
+  description = db.StringProperty()
+  source = db.TextProperty(required=True)
+
+  def __str__(self):
+    """Overridden string representation."""
+    return self.name
+
+  def put(self):
+    """Overridden method to ensure name is kept unique."""
+    for template in Template.all().filter('name = ', self.name):
+      if not self.is_saved() or template.key() != self.key():
+        raise db.BadValueError('There is already a template named "%s"'
+                               % self.name)
+    super(Template, self).put()
+    utility.clear_memcache()
+
+  def delete(self):
+    """Overridden to ensure memcache is cleared."""
+    super(Template, self).delete()
+    utility.clear_memcache()
+
+  @staticmethod
+  def all_templates():
+    """Returns a list of all of the templates in the system.
+
+    Returns:
+      A list of all templates
+
+    """
+    key = 'all_templates:'
+    templates = utility.memcache_get(key)
+    if not templates:
+      templates = list(Template.all())
+      utility.memcache_set(key, templates)
+    return templates
+
+
