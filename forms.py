@@ -60,6 +60,14 @@ class GroupEditForm(djangoforms.ModelForm):
     exclude = ['users']
 
 
+
+class TemplateEditForm(djangoforms.ModelForm):
+  """Form used by editors to modify a user group."""
+
+  class Meta(object):
+    # pylint: disable-msg=R0903
+    """Django instruction to link the form to UserGroup model."""
+    model = models.Template
 class UserEditForm(djangoforms.ModelForm):
   """Form used by editors to modify a user profile."""
 

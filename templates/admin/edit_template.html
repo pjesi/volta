@@ -1,0 +1,49 @@
+{% extends "admin/base.html" %}
+
+
+{% block heading %}
+{% if template %}
+  Edit Template: {{ template.name }}
+{% else %}
+  Create Template
+{% endif %}
+{% endblock %}
+
+
+{% block content %}
+
+{% if template %}
+  <a href="{% url views.admin.delete_template template.key.id %}">Delete Template</a>
+  <br /><br />
+{% endif %}
+
+
+<h1>Template Information</h1>
+
+<form action="{% url views.admin.edit_template template.key.id %}"
+      method="post" class="volta-form">
+
+  <p class="fi_txt">
+	{{ form.name.label_tag }}
+	{{ form.name }}
+	{{ form.name.errors }}	
+  </p>
+
+  <p class="fi_txt">
+	{{ form.description.label_tag }}
+	{{ form.description }}
+	{{ form.description.errors }}	
+  </p>
+
+  <p class="fi_src">
+	{{ form.source.label_tag }}
+	{{ form.source }}
+  </p>	
+  
+  <div class="fi_btn">
+    <input type="submit" value="Save" />
+  </div>
+</form>
+
+
+{% endblock %}

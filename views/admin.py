@@ -422,6 +422,75 @@ def list_groups(request):
 
 
 @super_user_required
+@super_user_required
+def list_templates(request):
+  """Lists all the templates in the DB for editing.
+
+  Args:
+    request: The request object
+
+  Returns:
+    A Django HttpResponse object.
+
+  """
+  templates = models.Template.all().order('name')
+  return utility.respond(request, 'admin/list_templates', {'templates': templates})
+
+
+@super_user_required
+def new_template(request):
+  """Creates a new template.
+
+  Args:
+    request: The request object
+
+  Returns:
+    A HttpResponse object.
+
+  """
+  return edit_template(request, None)
+
+
+@super_user_required
+def edit_template(request, template_id):
+  """Edits an existing templlate or creates a new one if no ID is passed.
+
+  Args:
+    request: The request object
+    group_id: The ID of the template to edit, or None if this is a new group
+
+  Returns:
+    A Django HttpResponse object.
+
+  """
+  template = None
+  if template_id:
+    template = models.Template.get_by_id(int(template_id))
+  return utility.edit_instance(request, models.Template, forms.TemplateEditForm,
+                               'admin/edit_template',
+                               urlresolvers.reverse('views.admin.list_templates'),
+                               template_id, template=template)
+
+
+@super_user_required
+def delete_template(_request, template_id):
+  """Deletes a given template.
+
+  Args:
+    _request: The request object (ignored)
+    template_id: Id of the group to delete
+
+  Returns:
+    A Django HttpResponse object.
+
+  """
+  template = models.Template.get_by_id(int(template_id))
+  template.delete()
+
+  url = urlresolvers.reverse('views.admin.list_templates')
+  return http.HttpResponseRedirect(url)
+
+
 def view_group(request, group_id):
   """Lists all the UserProfiles in a group.
 

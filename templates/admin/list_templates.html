@@ -1,0 +1,20 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+<h1>Templates</h1>
+
+<ul>
+{% for template in templates %}
+  <li>
+    <strong>{{ template.name|escape }}</strong> - {{ template.description|escape }} -
+    <a href="{% url views.admin.edit_template template.key.id %}">edit</a> -
+    <a href="{% url views.admin.delete_template template.key.id %}">delete</a>    
+  </li>
+{% endfor %}
+</ul>
+
+<p>
+  <a href="{% url views.admin.new_template %}">Create a new template</a>
+</p>
+
+{% endblock %}
