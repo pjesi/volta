@@ -286,6 +286,8 @@ class Page(File):
 
   title = db.StringProperty()
   content = db.TextProperty()
+  template = db.ReferenceProperty(Template)
+
 
   def delete(self):
     """Overridden to ensure child objects are cleaned up on delete."""

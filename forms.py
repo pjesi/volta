@@ -40,7 +40,7 @@ class PageEditForm(djangoforms.ModelForm):
   class Meta(object):
     # pylint: disable-msg=R0903
     """Django instruction to link form to Page model."""
-    fields = ['title', 'name']
+    fields = ['title', 'name', 'template']
     model = models.Page
 
   def clean_name(self):
