@@ -2,7 +2,11 @@
  "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
-    <title>YUI App Theme</title>
+    <title>
+	    {% block title %}
+	      {% if title %} {{ title }} {% else %} {{ configuration.SYSTEM_TITLE }} {% endif %}
+	    {% endblock %}
+    </title>
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8" >
     <link rel="stylesheet" href="http://yui.yahooapis.com/2.7.0/build/reset-fonts-grids/reset-fonts-grids.css" type="text/css">
     <link rel="stylesheet" href="/static/themes/yui/css/yuiapp.css" type="text/css">
@@ -14,19 +18,30 @@
     <div id="doc3" class="yui-t6">
 
         <div id="hd">
-            <h1>YUI App Theme</h1>
+            <h1>
+		        {% block heading %}
+					{% if title %} {{ title }} {% else %} {{ configuration.SYSTEM_TITLE }} {% endif %}
+				{% endblock %}     
+            </h1>
             <div id="navigation">
                 <ul id="primary-navigation">
-                    <li><a href="#">Some Page</a></li>
-                    <li class="active"><a href="#">Active</a></li>
-                    <li><a href="#">Login</a></li>
-                    <li><a href="#">Signup</a></li>
+                    <li><a href="/">Site</a></li>
+                    <li class="active"><a href="/admin/">Publishing</a></li>
+                    <li><a href="#">Content</a></li>
+                    <li><a href="#">Users</a></li>
                 </ul>
 
                 <ul id="user-navigation">
-                    <li><a href="#">Profile</a></li>
-                    <li><a href="#">Settings</a></li>
-                    <li><a href="#">Logout</a></li>
+			      {% block user_header %}
+					{% if user %}
+					  {% if is_superuser %}<li><a href="{% url views.admin.index %}">Edit site</a></li>{% endif %}
+					  {% if is_admin %}<li><a href="{% url views.admin.display_memcache_info %}">Memcache</a></li>{% endif %}
+					  <li><a href="{% if is_superuser %}/admin/edit/user/{{ user.email }}{% endif %}">{{ user.email }}</a></li>
+					  {% if sign_out %}<li><a href="{{sign_out}}">Sign out</a></li>{% endif %}
+					{% else %}
+					  {% if sign_in %}<li><a href="{{sign_in}}">Sign in</a></li>{%endif%}
+					{% endif %}
+				  {% endblock %}
                 </ul>
                 <div class="clear"></div>
             </div>
@@ -35,6 +50,12 @@
         <div id="bd">
             <div id="yui-main">
                 <div class="yui-b"><div class="yui-g">
+                		{% block content %}
+		  					
+						
+                
+                
+                
                     <h2>Hello, there.</h2>
                     <p><a href="http://github.com/tylerhall/yui-app-theme/">YUI App Theme</a> is a generic, skinnable layout for web applications.</p>
                     <p>What you're looking at is the basic page template. Because it's built on top of the <a href="http://developer.yahoo.com/yui/grids/">YUI Grids</a> foundation, you can easily change the page and column widths or even swap the columns around to suit your needs. Not only is it cross-browser compatible (we support all the major browsers including IE6), but it's super easy to extend as well.</p>
@@ -275,10 +296,25 @@
                             </dl>
                         </div>
                     </div>
-
+					{% endblock %}
                 </div></div>
             </div>
             <div id="sidebar" class="yui-b">
+
+				<div class="block">
+                	<div class="hd">
+                        <h2>Sidebar</h2>
+                    </div>
+                	<div class="bd">
+	                   	{% block sidebar %}
+					        {% if sidebar %}
+					          {{ sidebar }}
+					        {% else %}
+					          &nbsp;
+					        {% endif %}
+					    {% endblock %}
+	      			</div>
+	      		</div>
 
                 <!-- Sidebar block (same markup as basic block) -->
                 <div class="block">
@@ -289,7 +325,7 @@
                         <p>This sidebar block uses the exact same markup as the main body blocks. This lets you move them around easily - as they automatically resize to fit the available space.</p>
                     </div>
                 </div>
-
+                
                 <!-- Layout adjustment options (for demo purposes) -->
                 <div class="block">
                     <div class="hd">
@@ -319,7 +355,8 @@
                         <ul id="page-color-switcher" class="biglist">
                             <li><a href="#" title="red">Red</a></li>
                             <li><a href="#" title="green">Green</a></li>
-                            <li><a href="#" title="purple" class="highlight">Purple</a></li>
+                            <li><a href="#" title="purple">Purple</a></li>
+                            <li><a href="#" title="orange" class="highlight">Orange</a></li>
                             <li><a href="#" title="aqua">Aqua</a></li>
                         </ul>
 
@@ -346,9 +383,26 @@
         </div>
 
         <div id="ft">
-            <p class="inner">Copyright &copy; 2009 Blah Your Website</p>
+            <p class="inner">
+				{% block footer %}
+					{{ configuration.FOOTER_HTML }}
+				{% endblock %}
+			</p>
         </div>
 
     </div>
+{% block tracking %}
+	{% if configuration.ANALYTICS_ID %}
+		<script type="text/javascript">
+		var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+		document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		</script>
+		<script type="text/javascript">
+		var pageTracker = _gat._getTracker("{{ configuration.ANALYTICS_ID }}");
+		pageTracker._initData();
+		pageTracker._trackPageview();
+		</script>
+	{% endif %}
+{% endblock %}
 </body>
 </html>
