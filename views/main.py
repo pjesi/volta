@@ -25,6 +25,10 @@ import configuration
 from django import http
 from django.core import urlresolvers
 from django.utils import simplejson
+
+
+from django import template
+
 import models
 import utility
 
@@ -58,10 +62,22 @@ def send_page(page, request):
     item.icon = '/static/images/fileicons/%s.png' % ext
 
   is_editor = page.user_can_write(profile)
+  if page.template:
+    page_template = template.Template(page.template.source)
+    params = utility.set_params(request, {'page': page, 'files': files, 'is_editor': is_editor})
+        
+    context = template.Context(params)
+    return http.HttpResponse(page_template.render(context))
+    
+    #mytemplate = Template(page.template.source)
+    #return http.HttpResponse(mytemplate.render(name="jack"))
 
-  base_html = '../templates/themes/%s/base.html' % (configuration.SYSTEM_THEME_NAME)
-  page_html = '../templates/themes/%s/page.html' % (configuration.SYSTEM_THEME_NAME)
-  return utility.respond(request, page_html, {'page': page, 'files': files,
+
+  else:	
+
+    base_html = '../templates/themes/%s/base.html' % (configuration.SYSTEM_THEME_NAME)
+    page_html = '../templates/themes/%s/page.html' % (configuration.SYSTEM_THEME_NAME)
+    return utility.respond(request, page_html, {'page': page, 'files': files,
                                               'is_editor': is_editor, 
                                               'base_html': base_html})
 

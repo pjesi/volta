@@ -22,10 +22,37 @@ import configuration
 
 from django import http
 from django import shortcuts
+from django.template import TemplateDoesNotExist
+
 from django.core import urlresolvers
 from google.appengine.api import memcache
 from google.appengine.api import users
 import models
+
+
+
+def set_params(request, params):
+  if params is None:
+    params = {}
+
+  if request.user:
+    params['user'] = request.user
+    params['sign_out'] = users.CreateLogoutURL('/')
+    params['is_admin'] = users.is_current_user_admin()
+  else:
+    params['sign_in'] = users.CreateLoginURL(request.path)
+
+  if hasattr(request, 'profile') and request.profile is not None:
+    profile = request.profile
+    params['sidebar'] = models.Sidebar.render(profile)
+    params['is_superuser'] = profile.is_superuser
+  else:
+    params['is_superuser'] = False
+    params['sidebar'] = models.Sidebar.render(None)
+
+  params['configuration'] = configuration
+  params['request'] = request
+  return params
 
 
 def respond(request, template, params=None):
@@ -45,25 +72,7 @@ def respond(request, template, params=None):
     Whatever render_to_response(template, params) raises.
 
   """
-  if params is None:
-    params = {}
-
-  if request.user:
-    params['user'] = request.user
-    params['sign_out'] = users.CreateLogoutURL('/')
-    params['is_admin'] = users.is_current_user_admin()
-  else:
-    params['sign_in'] = users.CreateLoginURL(request.path)
-
-  if hasattr(request, 'profile') and request.profile is not None:
-    profile = request.profile
-    params['sidebar'] = models.Sidebar.render(profile)
-    params['is_superuser'] = profile.is_superuser
-  else:
-    params['is_superuser'] = False
-    params['sidebar'] = models.Sidebar.render(None)
-    
-  params['configuration'] = configuration
+  params = set_params(request, params)
 
   if not template.endswith('.html'):
     template += '.html'
