@@ -319,12 +319,38 @@
                 <!-- Sidebar block (same markup as basic block) -->
                 <div class="block">
                     <div class="hd">
-                        <h2>Sidebar Block  &larr; This is an H2 or H3</h2>
+                        <h2>Breadcrumbs</h2>
                     </div>
                     <div class="bd">
-                        <p>This sidebar block uses the exact same markup as the main body blocks. This lets you move them around easily - as they automatically resize to fit the available space.</p>
+                        <p>
+                        {% block breadcrumbs %}
+							{% if page.breadcrumbs %}
+								{% for breadcrumb in page.breadcrumbs %}
+									<a href="{{ breadcrumb.path }}">{{ breadcrumb.name }}</a>
+									{% if not forloop.last %}
+									  &raquo;
+									{% endif %}
+							    {% endfor %}
+							{% endif %}
+						{% endblock %}
+                        </p>
                     </div>
                 </div>
+                
+                <!-- Sidebar block (same markup as basic block) -->
+                <div class="block">
+                    <div class="hd">
+                        <h2>Whatever</h2>
+                    </div>
+                    <div class="bd">
+                        <p>
+                        {% block extra_block %}
+							
+						{% endblock %}
+                        </p>
+                    </div>
+                </div>
+                
                 
                 <!-- Layout adjustment options (for demo purposes) -->
                 <div class="block">
