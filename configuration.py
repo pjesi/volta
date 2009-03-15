@@ -45,4 +45,4 @@ ANALYTICS_ID = ''
 # Name of theme for your site, must be located in
 # 'templates/themes/{FOLDER NAME}' where your customized
 # base and page files should be located
-SYSTEM_THEME_NAME = 'nautica05'
+SYSTEM_THEME_NAME = 'yui'
