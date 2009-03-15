@@ -1,15 +1,35 @@
 {% extends "admin/base.html" %}
 
 {% block content %}
-<form action="" method="post" enctype="multipart/form-data">
-  <h1>Add individually</h1>
+<form action="" method="post" enctype="multipart/form-data" class="volta-form">
+
+<fieldset>
+	<legend>Add individually</legend>
+	<p class="fi_bdy">
+  <label>Users</label>
   <textarea rows="15" cols="40" name="users_text"></textarea>
-  <br><br>
-  <h1>or upload file</h1>
-  <input type="file" name="users_file"> &nbsp;
-  Complete: <input type="checkbox" name="complete"> &nbsp;
-  <br><br><br>
+</p>
+</fieldset>
+
+<fieldset>
+<legend>
+or upload file
+</legend>
+
+<p class="fi_txt">
+  <label for="file">File</label>
+  <input type="file" name="users_file" id="file"> 
+</p>
+
+<p class="fi_chk">
+  <label for="complete"><input type="checkbox" name="complete" id="complete"> Complete</label>
+</p>
+
+</fieldset>
+
+  <div class="fi_btn">
   <input type="submit" value="Submit" />
+  </div>
 </form>
 
 {% endblock %}
